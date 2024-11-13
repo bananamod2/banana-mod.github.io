@@ -22,21 +22,21 @@ import * as progressMonitor from './tw-progress-monitor';
 const mainMessages = {
     'gui.loader.headline': (
         <FormattedMessage
-            defaultMessage=" "
+            defaultMessage="Cool mod"
             description="Main loading message"
             id="gui.loader.headline"
         />
     ),
     'gui.loader.creating': (
         <FormattedMessage
-            defaultMessage=" "
+            defaultMessage="O no cringe"
             description="Main creating message"
             id="gui.loader.creating"
         />
     ),
     'gui.loader.playground': (
         <FormattedMessage
-            defaultMessage=" "
+            defaultMessage="I slipped on a peal"
             description="Playground load message"
             id="gui.loader.playground"
         />
@@ -45,22 +45,22 @@ const mainMessages = {
 
 const messages = defineMessages({
     generic: {
-        defaultMessage: ' ',
+        defaultMessage: 'Cringe alert',
         description: 'Initial generic loading message',
         id: 'tw.loader.generic'
     },
     projectData: {
-        defaultMessage: ' ',
+        defaultMessage: 'salami',
         description: 'Appears when loading project data',
         id: 'tw.loader.data'
     },
     assetsKnown: {
-        defaultMessage: ' ',
+        defaultMessage: 'gopgopgop',
         description: 'Appears when loading project assets and amount of assets is known',
         id: 'tw.loader.assets.known'
     },
     assetsUnknown: {
-        defaultMessage: ' ',
+        defaultMessage: 'susmesage',
         description: 'Appears when loading project assets but amount of assets is unknown',
         id: 'tw.loader.assets.unknown'
     }
