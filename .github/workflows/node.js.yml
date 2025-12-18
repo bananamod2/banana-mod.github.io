@@ -19,7 +19,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,19 +26,18 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: '16.x'
 
-      - name: Install dependencies and build site
+      - name: Install dependencies & build
         run: |
           npm install -g pnpm@7
           pnpm up
           pnpm i --shamefully-hoist
           pnpm run build
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
         with:
-          name: site-build
           path: ./build
 
   deploy:
@@ -47,15 +45,6 @@ jobs:
     needs: build
     environment:
       name: github-pages
-      url: https://penguinmod.site/project
-
     steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: site-build
-          path: ./build
-
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
-        # no extra with: needed unless you want to customize
