@@ -5,7 +5,7 @@ on:
   repository_dispatch:
   push:
     branches:
-      - main   # Only deploy from main branch (optional)
+      - main
 
 permissions:
   contents: read
@@ -22,10 +22,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Setup GitHub Pages
-        id: pages
-        uses: actions/configure-pages@v1
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -59,5 +55,7 @@ jobs:
           path: ./build/
 
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v1
+        with:
+          # The deploy action automatically deploys contents from ./build
+          # Make sure path exists and is not empty
