@@ -19,9 +19,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -36,7 +37,7 @@ jobs:
           pnpm run build
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: site-build
           path: ./build
@@ -47,13 +48,14 @@ jobs:
     environment:
       name: github-pages
       url: https://penguinmod.site/project
+
     steps:
       - name: Download build artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: site-build
           path: ./build
 
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v1
-        # ✅ Do NOT include an empty 'with:' here
+        uses: actions/deploy-pages@v4
+        # no extra with: needed unless you want to customize
