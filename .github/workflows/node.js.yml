@@ -4,6 +4,8 @@ on:
   workflow_dispatch:
   repository_dispatch:
   push:
+    branches:
+      - main   # Only deploy from main branch (optional)
 
 permissions:
   contents: read
@@ -59,6 +61,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
-        with:
-          # The deploy action will automatically pick up the contents from ./build
-          # because we just downloaded it there
