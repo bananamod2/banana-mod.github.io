@@ -19,7 +19,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -47,8 +46,7 @@ jobs:
     needs: build
     environment:
       name: github-pages
-      url: 'https://penguinmod.site/project'
-
+      url: https://penguinmod.site/project
     steps:
       - name: Download build artifact
         uses: actions/download-artifact@v3
@@ -58,3 +56,4 @@ jobs:
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v1
+        # ✅ Do NOT include an empty 'with:' here
