@@ -35,11 +35,12 @@ jobs:
           npm i -g pnpm@7
           pnpm up
           pnpm i --shamefully-hoist
-          pnpm run build # Use a script if possible instead of direct webpack
+          pnpm run build
 
-      - name: Upload artifact for Pages
-        uses: actions/upload-pages-artifact@v1
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
         with:
+          name: site-build
           path: ./build/
 
   deploy:
@@ -49,6 +50,15 @@ jobs:
       name: github-pages
       url: 'https://penguinmod.site/project'
     steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: site-build
+          path: ./build/
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
+        with:
+          # The deploy action will automatically pick up the contents from ./build
+          # because we just downloaded it there
