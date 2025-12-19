@@ -100,9 +100,9 @@ class GUI extends React.Component {
                     <Modal
                         contentLabel="Banana-mod 🍌"
                         onRequestClose={() => this.setState({ showModal: false })}
-                        styleContent={ {width: "700px"} }
+                        styleContent={ {width: "400px"} }
                     >
-                        <div style={{ padding: '20px', "backgroundColor":"rgba(255, 255, 255, 0.7)"}}>
+                        <div style={{ padding: '5px', "backgroundColor":"rgba(255, 255, 255, 0.7)"}}>
                             <h1>Welcome to Banana-mod!</h1>
                             <p>This is a mod of Snail-ide that is a mod of PenguinMod that is a mod of Turbowarp which is a mod of Scratch.</p>
                             <p>Banana-mod adds features such as:</p>
