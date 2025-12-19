@@ -38,13 +38,16 @@ class GUI extends React.Component {
         };
 
         this.handleMessage = this.handleMessage.bind(this);
+        this.handleVmInit = this.handleVmInit.bind(this);
     }
 
     componentDidMount() {
         window.addEventListener('message', this.handleMessage);
         setIsScratchDesktop(this.props.isScratchDesktop);
         this.props.onStorageInit(storage);
-        this.props.onVmInit(this.props.vm);
+
+        // safe VM initialization
+        this.handleVmInit(this.props.vm);
     }
 
     componentWillUnmount() {
@@ -55,6 +58,21 @@ class GUI extends React.Component {
         if (event.origin !== 'https://www.snail-ide.com') return;
         this.setState({ loginData: event.data });
         console.log(event.data);
+    }
+
+    handleVmInit(vm) {
+        if (!vm) return;
+
+        // Wait for the renderer to exist
+        if (vm.runtime?.renderer) {
+            try {
+                // Example of safely calling renderer methods
+                vm.runtime.renderer.setPrivateSkinAccess?.(true);
+            } catch (e) {
+                console.warn('VM renderer not ready:', e);
+            }
+        }
+        this.props.onVmInit(vm);
     }
 
     componentDidUpdate(prevProps) {
@@ -74,18 +92,6 @@ class GUI extends React.Component {
         }
 
         const {
-            assetHost,
-            cloudHost,
-            error,
-            isError,
-            isScratchDesktop,
-            isShowingProject,
-            onProjectLoaded,
-            onStorageInit,
-            onUpdateProjectId,
-            onVmInit,
-            projectHost,
-            projectId,
             children,
             fetchingProject,
             isLoading,
@@ -135,36 +141,20 @@ class GUI extends React.Component {
 }
 
 GUI.propTypes = {
-    assetHost: PropTypes.string,
     children: PropTypes.node,
-    cloudHost: PropTypes.string,
-    error: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
     fetchingProject: PropTypes.bool,
-    intl: intlShape,
-    isError: PropTypes.bool,
-    isEmbedded: PropTypes.bool,
-    isFullScreen: PropTypes.bool,
     isLoading: PropTypes.bool,
-    isScratchDesktop: PropTypes.bool,
-    isShowingProject: PropTypes.bool,
     isPlayground: PropTypes.bool,
-    loadingStateVisible: PropTypes.bool,
-    onProjectLoaded: PropTypes.func,
-    onSeeCommunity: PropTypes.func,
-    onStorageInit: PropTypes.func,
-    onUpdateProjectId: PropTypes.func,
     onVmInit: PropTypes.func,
+    onStorageInit: PropTypes.func,
+    onProjectLoaded: PropTypes.func,
+    onUpdateProjectId: PropTypes.func,
     onChangedProjectTitle: PropTypes.func.isRequired,
-    projectHost: PropTypes.string,
     projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    telemetryModalVisible: PropTypes.bool,
-    vm: PropTypes.instanceOf(VM).isRequired,
-    username: PropTypes.string
+    vm: PropTypes.instanceOf(VM).isRequired
 };
 
 GUI.defaultProps = {
-    isScratchDesktop: false,
-    isPlayground: false,
     onStorageInit: storageInstance => storageInstance.addOfficialScratchWebStores(),
     onProjectLoaded: () => {},
     onUpdateProjectId: () => {},
@@ -174,66 +164,16 @@ GUI.defaultProps = {
 const mapStateToProps = state => {
     const loadingState = state.scratchGui.projectState.loadingState;
     return {
-        activeTabIndex: state.scratchGui.editorTab.activeTabIndex,
-        alertsVisible: state.scratchGui.alerts.visible,
-        backdropLibraryVisible: state.scratchGui.modals.backdropLibrary,
-        blocksTabVisible: state.scratchGui.editorTab.activeTabIndex === BLOCKS_TAB_INDEX,
-        cardsVisible: state.scratchGui.cards.visible,
-        connectionModalVisible: state.scratchGui.modals.connectionModal,
-        costumeLibraryVisible: state.scratchGui.modals.costumeLibrary,
-        costumesTabVisible: state.scratchGui.editorTab.activeTabIndex === COSTUMES_TAB_INDEX,
+        isShowingProject: getIsShowingProject(loadingState),
         error: state.scratchGui.projectState.error,
         isError: getIsError(loadingState),
-        isEmbedded: state.scratchGui.mode.isEmbedded,
-        isFullScreen: state.scratchGui.mode.isFullScreen || state.scratchGui.mode.isEmbedded,
-        isPlayerOnly: state.scratchGui.mode.isPlayerOnly,
-        isRtl: state.locales.isRtl,
-        isShowingProject: getIsShowingProject(loadingState),
-        loadingStateVisible: state.scratchGui.modals.loadingProject,
-        projectId: state.scratchGui.projectState.projectId,
-        soundsTabVisible: state.scratchGui.editorTab.activeTabIndex === SOUNDS_TAB_INDEX,
-        targetIsStage: (
-            state.scratchGui.targets.stage &&
-            state.scratchGui.targets.stage.id === state.scratchGui.targets.editingTarget
-        ),
-        telemetryModalVisible: state.scratchGui.modals.telemetryModal,
-        tipsLibraryVisible: state.scratchGui.modals.tipsLibrary,
-        usernameModalVisible: state.scratchGui.modals.usernameModal,
-        settingsModalVisible: state.scratchGui.modals.settingsModal,
-        extensionsManagerModalVisible: state.scratchGui.modals.extensionManagerModal,
-        customExtensionModalVisible: state.scratchGui.modals.customExtensionModal,
         vm: state.scratchGui.vm
     };
 };
 
 const mapDispatchToProps = dispatch => ({
-    onExtensionButtonClick: () => dispatch(openExtensionLibrary()),
-    onActivateTab: tab => dispatch(activateTab(tab)),
-    onActivateCostumesTab: () => dispatch(activateTab(COSTUMES_TAB_INDEX)),
-    onActivateSoundsTab: () => dispatch(activateTab(SOUNDS_TAB_INDEX)),
-    onRequestCloseBackdropLibrary: () => dispatch(closeBackdropLibrary()),
-    onRequestCloseCostumeLibrary: () => dispatch(closeCostumeLibrary())
+    onChangedProjectTitle: title => dispatch({ type: 'SET_PROJECT_TITLE', title }),
+    onVmInit: vm => {}
 });
 
-const ConnectedGUI = injectIntl(connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(GUI));
-
-const WrappedGui = compose(
-    LocalizationHOC,
-    ErrorBoundaryHOC('Top Level App'),
-    FontLoaderHOC,
-    ProjectFetcherHOC,
-    TitledHOC,
-    ProjectSaverHOC,
-    vmListenerHOC,
-    vmManagerHOC,
-    SBFileUploaderHOC,
-    cloudManagerHOC,
-    TWFullScreenResizerHOC
-)(ConnectedGUI);
-
-WrappedGui.setAppElement = ReactModal.setAppElement;
-
-export default WrappedGui;
+export default TitledHOC(connect(mapStateToProps, mapDispatchToProps)(GUI));
