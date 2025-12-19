@@ -98,20 +98,17 @@ class GUI extends React.Component {
 
                 {this.state.showModal && (
                     <Modal
-                        contentLabel="Banana-mod"
+                        contentLabel="Banana-mod 🍌"
                         onRequestClose={() => this.setState({ showModal: false })}
                         styleContent={{
-                            width: '50vw',
-                            height: '100vh',
-                            position: 'fixed',
-                            top: 0,
-                            left: 0,
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: 'rgba(0,0,0,0.5)'
-                        }}
-                    >
+                            inset: 'auto',
+                            margin: 'auto',
+                            maxWidth: '650px',
+                            width: '90%',
+                            maxHeight: '80vh',
+                            borderRadius: '12px',
+                            overflow: 'hidden'
+                        }}>
                         <div style={{
                             padding: '20px',
                             width: '80%',
