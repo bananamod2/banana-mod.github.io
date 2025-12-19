@@ -27,6 +27,8 @@ import TWFullScreenResizerHOC from '../lib/tw-fullscreen-resizer-hoc.jsx';
 import GUIComponent from '../components/gui/gui.jsx';
 import {setIsScratchDesktop} from '../lib/isScratchDesktop.js';
 
+import RandomProjectNameButton from '../components/random-project-name-button/random-project-name-button.jsx';
+
 class GUI extends React.Component {
     constructor(props) {
         super(props);
@@ -35,17 +37,24 @@ class GUI extends React.Component {
             showModal: true
         };
 
-        window.addEventListener('message', (event) => {
-            if (event.origin !== 'https://www.snail-ide.com') return;
-            this.setState({ loginData: event.data });
-            console.log(event.data);
-        });
+        this.handleMessage = this.handleMessage.bind(this);
     }
 
     componentDidMount() {
+        window.addEventListener('message', this.handleMessage);
         setIsScratchDesktop(this.props.isScratchDesktop);
         this.props.onStorageInit(storage);
         this.props.onVmInit(this.props.vm);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('message', this.handleMessage);
+    }
+
+    handleMessage(event) {
+        if (event.origin !== 'https://www.snail-ide.com') return;
+        this.setState({ loginData: event.data });
+        console.log(event.data);
     }
 
     componentDidUpdate(prevProps) {
@@ -82,6 +91,7 @@ class GUI extends React.Component {
             isLoading,
             loadingStateVisible,
             isPlayground,
+            onChangedProjectTitle,
             ...componentProps
         } = this.props;
 
@@ -94,15 +104,18 @@ class GUI extends React.Component {
                     {...componentProps}
                 >
                     {children}
+
+                    {/* Random Project Name Button */}
+                    <RandomProjectNameButton onChangedProjectTitle={onChangedProjectTitle} />
                 </GUIComponent>
 
                 {this.state.showModal && (
                     <Modal
                         contentLabel="Banana-mod 🍌"
                         onRequestClose={() => this.setState({ showModal: false })}
-                        styleContent={ {width: "400px"} }
+                        styleContent={{ width: "400px" }}
                     >
-                        <div style={{ padding: '5px', "backgroundColor":"rgba(255, 255, 255, 0.7)"}}>
+                        <div style={{ padding: '5px', backgroundColor: "rgba(255, 255, 255, 0.7)" }}>
                             <h1>Welcome to Banana-mod!</h1>
                             <p>This is a mod of Snail-ide that is a mod of PenguinMod that is a mod of Turbowarp which is a mod of Scratch.</p>
                             <p>Banana-mod adds features such as:</p>
@@ -141,6 +154,7 @@ GUI.propTypes = {
     onStorageInit: PropTypes.func,
     onUpdateProjectId: PropTypes.func,
     onVmInit: PropTypes.func,
+    onChangedProjectTitle: PropTypes.func.isRequired,
     projectHost: PropTypes.string,
     projectId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     telemetryModalVisible: PropTypes.bool,
@@ -198,13 +212,12 @@ const mapDispatchToProps = dispatch => ({
     onActivateCostumesTab: () => dispatch(activateTab(COSTUMES_TAB_INDEX)),
     onActivateSoundsTab: () => dispatch(activateTab(SOUNDS_TAB_INDEX)),
     onRequestCloseBackdropLibrary: () => dispatch(closeBackdropLibrary()),
-    onRequestCloseCostumeLibrary: () => dispatch(closeCostumeLibrary()),
-    onRequestCloseTelemetryModal: () => dispatch(closeTelemetryModal())
+    onRequestCloseCostumeLibrary: () => dispatch(closeCostumeLibrary())
 });
 
 const ConnectedGUI = injectIntl(connect(
     mapStateToProps,
-    mapDispatchToProps,
+    mapDispatchToProps
 )(GUI));
 
 const WrappedGui = compose(
