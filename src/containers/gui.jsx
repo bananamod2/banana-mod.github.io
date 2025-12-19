@@ -98,7 +98,7 @@ class GUI extends React.Component {
 
                 {this.state.showModal && (
                     <Modal
-                        contentLabel="MerrCode"
+                        contentLabel="Banana-mod"
                         onRequestClose={() => this.setState({ showModal: false })}
                         styleContent={{
                             width: '50vw',
