@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from '../button/button.jsx';
+import Button from '../button/button.jsx'; // go up one folder to import Button
 
 // List of random project names
 const RANDOM_NAMES = [
@@ -11,7 +11,8 @@ const RANDOM_NAMES = [
     'Crazy Scratch',
     'MerrCode Madness',
     'Block Party',
-    'Code Galaxy'
+    'Code Galaxy',
+    'Hyper bananas'
 ];
 
 const RandomProjectNameButton = ({ onChangedProjectTitle }) => {
