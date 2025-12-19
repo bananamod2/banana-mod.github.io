@@ -103,7 +103,7 @@ class GUI extends React.Component {
                         styleContent={{
                             inset: 'auto',
                             margin: 'auto',
-                            width: '200px',
+                            width: '100%',
                             height: '300px',
                             borderRadius: '12px',
                             overflow: 'hidden'
