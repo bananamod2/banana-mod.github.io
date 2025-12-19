@@ -101,7 +101,7 @@ class GUI extends React.Component {
                         contentLabel="MerrCode"
                         onRequestClose={() => this.setState({ showModal: false })}
                         styleContent={{
-                            width: '100vw',
+                            width: '50vw',
                             height: '100vh',
                             position: 'fixed',
                             top: 0,
@@ -119,16 +119,16 @@ class GUI extends React.Component {
                             backgroundColor: 'rgba(255, 255, 255, 0.95)',
                             borderRadius: '10px'
                         }}>
-                            <h1>Welcome to MerrCode!</h1>
-                            <p>HAPPY CHRISTMAS</p>
-                            <p>This is a mod of PenguinMod that is a mod of Turbowarp which is a mod of Scratch.</p>
-                            <p>MerrCode adds features such as:</p>
+                            <h1>Welcome to Banana-mod!</h1>
+                            <p>This is a mod of Snail-ide that is a mod of PenguinMod that is a mod of Turbowarp which is a mod of Scratch.</p>
+                            <p>Banana-mod adds features such as:</p>
                             <ul>
-                                <li>Extra UI</li>
+                                <li>Extra Extensions</li>
                                 <li>Extra Features</li>
-                                <li>And More!</li>
+                                <li>Bananas 🍌</li>
+                                <li>And a lot more!</li>
                             </ul>
-                            <i>Enjoy coding! :3</i>
+                            <i>Enjoy programing! XD</i>
                         </div>
                     </Modal>
                 )}
